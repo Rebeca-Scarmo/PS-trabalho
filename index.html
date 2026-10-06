@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Almoxarifado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        
+        .phone-screen {
+            width: 360px; 
+            height: 640px; 
+            background-color: white;
+            border: 10px solid #333;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            overflow-y: auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .header {
+            background-color: #0056b3;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .content {
+            padding: 15px;
+        }
+
+        h2 {
+            font-size: 1em;
+            color: #333;
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box; 
+            font-size: 1em;
+        }
+
+        .material-list-item {
+            background-color: #f9f9f9;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .material-info {
+            flex: 1;
+        }
+
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-qty {
+            background-color: #ddd;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+        }
+
+        .qty-value {
+            font-weight: bold;
+            font-size: 1.1em;
+            width: 30px;
+            text-align: center;
+        }
+
+        .btn-confirm {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .check-item {
+            background-color: #fff;
+            border-bottom: 1px solid #eee;
+            padding: 15px 0;
+        }
+
+        .check-item-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .check-fields {
+            display: flex;
+            gap: 10px;
+        }
+
+        .check-input-group {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TELA 1 -->
+    <div class="phone-screen" id="tela-requisicao">
+        <div class="header">Nova requisição</div>
+        <div class="content">
+            <div class="form-group">
+                <input type="text" placeholder="Buscar material (ex: cimento, tubo)">
+            </div>
+            
+            <h2>Materiais frequentes</h2>
+            
+            <div class="material-list-item">
+                <div class="material-info">
+                    <strong>Cimento 50kg</strong><br>
+                    <small>(sc)</small>
+                </div>
+                <div class="qty-controls">
+                    <button class="btn-qty">-</button>
+                    <span class="qty-value">0</span>
+                    <button class="btn-qty">+</button>
+                </div>
+            </div>
+
+            <div class="material-list-item">
+                <div class="material-info">
+                    <strong>Tubo PVC 100mm</strong><br>
+                    <small>(un)</small>
+                </div>
+                <div class="qty-controls">
+                    <button class="btn-qty">-</button>
+                    <span class="qty-value">0</span>
+                    <button class="btn-qty">+</button>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 20px;">
+                <label>Obra de destino</label>
+                <select>
+                    <option>Residencial Vista Alegre</option>
+                    <option>Edifício Central Park</option>
+                </select>
+            </div>
+
+            <button class="btn-confirm">Confirmar requisição</button>
+        </div>
+    </div>
+
+    <!-- TELA 2 -->
+    <div class="phone-screen" id="tela-conferencia">
+        <div class="header">Conferência</div>
+        <div class="content">
+            <p><strong>Obra:</strong> Residencial Vista Alegre <br>
+            <strong>Fornecedor:</strong> Construtora ABC</p>
+            
+            <div class="check-item">
+                <div class="check-item-header">Cimento 50kg (Ped: 150 sc)</div>
+                <div class="check-fields">
+                    <div class="check-input-group">
+                        <label>Qtd. Rec.</label>
+                        <input type="number" value="140" placeholder="0">
+                    </div>
+                    <div class="check-input-group">
+                        <label>Status</label>
+                        <select style="color: red; font-weight: bold;">
+                            <option>Divergência</option>
+                            <option>OK</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="check-item">
+                <div class="check-item-header">Cabo Cobre 2,5mm (Ped: 500 m)</div>
+                <div class="check-fields">
+                    <div class="check-input-group">
+                        <label>Qtd. Rec.</label>
+                        <input type="number" value="500" placeholder="0">
+                    </div>
+                    <div class="check-input-group">
+                        <label>Status</label>
+                        <select style="color: green; font-weight: bold;">
+                            <option>OK</option>
+                            <option>Divergência</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-confirm" style="background-color: #28a745;">Dar entrada no estoque real</button>
+        </div>
+    </div>
+
+</body>
+</html>
