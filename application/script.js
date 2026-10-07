@@ -124,14 +124,29 @@ document.addEventListener("click", function (e) {
   if (destino) irPara(destino.getAttribute("data-go"));
 });
 
-// busca simples nas listas
+// busca nas listas: ignora acentos e maiúsculas, e avisa quando nada é encontrado
+function normalizar(texto) {
+  return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
 document.querySelectorAll("[data-filtro]").forEach(function (campo) {
+  var lista = document.getElementById(campo.getAttribute("data-filtro"));
+
+  var aviso = document.createElement("p");
+  aviso.textContent = "Nenhum item encontrado.";
+  aviso.style.cssText = "display:none; padding:18px 4px; color:#b9ccd3; font-size:16px;";
+  lista.parentNode.insertBefore(aviso, lista.nextSibling);
+
   campo.addEventListener("input", function () {
-    var termo = campo.value.toLowerCase();
-    document.querySelectorAll("#" + campo.getAttribute("data-filtro") + " .item").forEach(function (item) {
-      var nome = item.querySelector("strong").textContent.toLowerCase();
-      item.style.display = nome.indexOf(termo) === -1 ? "none" : "";
+    var termo = normalizar(campo.value.trim());
+    var visiveis = 0;
+    lista.querySelectorAll(".item").forEach(function (item) {
+      var nome = normalizar(item.querySelector("strong").textContent);
+      var mostrar = nome.indexOf(termo) !== -1;
+      item.style.display = mostrar ? "" : "none";
+      if (mostrar) visiveis++;
     });
+    aviso.style.display = visiveis === 0 ? "block" : "none";
   });
 });
 
