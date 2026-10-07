@@ -73,6 +73,15 @@ function atualizarPedido() {
   document.getElementById("finalizar").disabled = total === 0;
 }
 
+// depois de finalizar, zera as quantidades para começar um novo pedido
+function limparPedido() {
+  document.querySelectorAll("#lista4 .item").forEach(function (item) {
+    item.querySelector("output").textContent = "0";
+    item.querySelector(".minus").disabled = true;
+  });
+  atualizarPedido();
+}
+
 document.querySelectorAll(".screen").forEach(function (tela) {
   adicionarCirculos(tela);
   criarMenu(tela);
@@ -118,13 +127,16 @@ document.addEventListener("click", function (e) {
   }
 
   var alvo = e.target.closest("[data-toast]");
-  if (alvo && !alvo.disabled) mostrarAviso(alvo.getAttribute("data-toast"));
+   if (alvo && !alvo.disabled) {
+    mostrarAviso(alvo.getAttribute("data-toast"));
+    if (alvo.id === "finalizar") limparPedido();
+  }
 
   var destino = e.target.closest("[data-go]");
   if (destino) irPara(destino.getAttribute("data-go"));
 });
 
-
+// busca nas listas: ignora acentos e maiúsculas, e avisa quando nada é encontrado
 function normalizar(texto) {
   return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
