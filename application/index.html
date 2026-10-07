@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>InsumoStack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&family=Barlow+Semi+Condensed:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="app">
+
+  <!-- 1. Boas-vindas -->
+  <section class="screen" id="tela1" data-circles="t1">
+    <div class="welcome">
+      <div class="logo big">insumo<br>Stack</div>
+      <p>Olá, seja bem-vindo(a) ao seu sistema de obras!</p>
+    </div>
+    <div class="actionbar"><button class="btn" data-go="tela2">Entrar</button></div>
+  </section>
+
+  <!-- 2. Obras -->
+  <section class="screen" id="tela2" data-tab="obras" data-circles="t2">
+    <header class="top">
+      <div class="logo small">insumo<br>Stack</div>
+      <h1>Suas obras</h1>
+      <p class="sub">Escolha uma obra para ver os pedidos.</p>
+    </header>
+    <div class="content">
+      <ul class="list">
+        <li><button class="obra" data-go="tela3"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 21V9l9-6 9 6v12M9 21v-7h6v7"/></svg></span><span class="txt"><strong>Armazém</strong><small>Amaralina</small></span><span class="chip a-caminho">2 a caminho</span></button></li>
+        <li><button class="obra" data-go="tela3"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 21V9l9-6 9 6v12M9 21v-7h6v7"/></svg></span><span class="txt"><strong>Hospital</strong><small>Brotas</small></span><span class="chip a-caminho">1 a caminho</span></button></li>
+        <li><button class="obra" data-go="tela3"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3 21V9l9-6 9 6v12M9 21v-7h6v7"/></svg></span><span class="txt"><strong>Colégio Municipal</strong><small>Nazaré</small></span><span class="chip em-estoque">Em dia</span></button></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3. Últimos pedidos -->
+  <section class="screen" id="tela3" data-tab="obras" data-circles="t3">
+    <header class="top">
+      <button class="voltar" data-go="tela2" aria-label="Voltar"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h1>Hospital · Brotas</h1>
+      <p class="sub">Últimos pedidos</p>
+    </header>
+    <div class="content">
+      <div class="card">
+        <ul class="pedidos">
+          <li><div><strong>Saco de cimento</strong><small>4 un</small></div><span class="chip a-caminho">A caminho</span></li>
+          <li><div><strong>Brita</strong><small>13 kg</small></div><span class="chip em-estoque">Em estoque</span></li>
+          <li><div><strong>Areia</strong><small>40 kg</small></div><span class="chip em-estoque">Em estoque</span></li>
+          <li><div><strong>Compensado 50x200</strong><small>5 un</small></div><span class="chip a-caminho">A caminho</span></li>
+        </ul>
+        <div class="total"><span>Total</span><strong>R$ 350,00</strong></div>
+      </div>
+    </div>
+    <div class="actionbar"><button class="btn" data-go="tela4">Novo pedido</button></div>
+  </section>
+
+  <!-- 4. Novo pedido -->
+  <section class="screen" id="tela4" data-tab="pedidos" data-circles="t4">
+    <header class="top">
+      <div class="logo small">insumo<br>Stack</div>
+      <h1>Novo pedido</h1>
+    </header>
+    <div class="content">
+      <p class="label">Obra</p>
+      <div class="chips" role="radiogroup" aria-label="Obra">
+        <button class="pick on" role="radio" aria-checked="true">Armazém · Amaralina</button>
+        <button class="pick" role="radio" aria-checked="false">Hospital · Brotas</button>
+        <button class="pick" role="radio" aria-checked="false">Colégio · Nazaré</button>
+      </div>
+      <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" placeholder="Pesquisar item…" data-filtro="lista4"></label>
+      <p class="label">Materiais frequentes</p>
+      <ul class="list itens" id="lista4">
+        <li class="item" data-preco="38"><div class="info"><strong>Saco de cimento</strong><small>un</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>0</output><button class="plus" aria-label="Aumentar">+</button></div></li>
+        <li class="item" data-preco="9"><div class="info"><strong>Brita</strong><small>kg</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>0</output><button class="plus" aria-label="Aumentar">+</button></div></li>
+        <li class="item" data-preco="4"><div class="info"><strong>Areia</strong><small>kg</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>0</output><button class="plus" aria-label="Aumentar">+</button></div></li>
+        <li class="item" data-preco="120"><div class="info"><strong>Compensado 50x200</strong><small>un</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>0</output><button class="plus" aria-label="Aumentar">+</button></div></li>
+      </ul>
+    </div>
+    <div class="actionbar"><button class="btn" id="finalizar" disabled data-toast="Pedido enviado!">Finalizar pedido<span class="badge" id="contagem"></span></button></div>
+  </section>
+
+  <!-- 5. Almoxarifado -->
+  <section class="screen" id="tela5" data-tab="almoxarifado" data-circles="t5">
+    <header class="top">
+      <div class="logo small">insumo<br>Stack</div>
+      <h1>Almoxarifado</h1>
+    </header>
+    <div class="content">
+      <p class="label">Obra</p>
+      <div class="chips" role="radiogroup" aria-label="Obra">
+        <button class="pick on" role="radio" aria-checked="true">Armazém · Amaralina</button>
+        <button class="pick" role="radio" aria-checked="false">Hospital · Brotas</button>
+        <button class="pick" role="radio" aria-checked="false">Colégio · Nazaré</button>
+      </div>
+      <p class="label">Em estoque agora</p>
+      <div class="card">
+        <ul class="pedidos">
+          <li><div><strong>Saco de cimento</strong></div><span class="qtd">12 un</span></li>
+          <li><div><strong>Brita</strong></div><span class="qtd">13 kg</span></li>
+          <li><div><strong>Areia</strong></div><span class="qtd">40 kg</span></li>
+          <li><div><strong>Compensado 50x200</strong></div><span class="qtd">5 un</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="actionbar"><button class="btn" data-go="tela6">Adicionar produtos</button></div>
+  </section>
+
+  <!-- 6. Entrada no estoque -->
+  <section class="screen" id="tela6" data-tab="almoxarifado" data-circles="t6">
+    <header class="top">
+      <button class="voltar" data-go="tela5" aria-label="Voltar"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <h1>Entrada no estoque</h1>
+    </header>
+    <div class="content">
+      <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" placeholder="Pesquisar item…" data-filtro="lista6"></label>
+      <p class="label">Materiais frequentes</p>
+      <ul class="list itens" id="lista6">
+        <li class="item"><div class="info"><strong>Saco de cimento</strong><small>un</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>4</output><button class="plus" aria-label="Aumentar">+</button></div></li>
+        <li class="item"><div class="info"><strong>Brita</strong><small>kg</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>13</output><button class="plus" aria-label="Aumentar">+</button></div></li>
+        <li class="item"><div class="info"><strong>Areia</strong><small>kg</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>50</output><button class="plus" aria-label="Aumentar">+</button></div></li>
+        <li class="item"><div class="info"><strong>Compensado 50x200</strong><small>un</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>5</output><button class="plus" aria-label="Aumentar">+</button></div></li>
+      </ul>
+    </div>
+    <div class="actionbar"><button class="btn" data-go="tela5" data-toast="Entrada registrada!">Dar entrada no estoque</button></div>
+  </section>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</main>
+<script src="script.js"></script>
+</body>
+</html>
