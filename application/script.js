@@ -124,7 +124,7 @@ document.addEventListener("click", function (e) {
   if (destino) irPara(destino.getAttribute("data-go"));
 });
 
-// busca nas listas: ignora acentos e maiúsculas, e avisa quando nada é encontrado
+
 function normalizar(texto) {
   return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
