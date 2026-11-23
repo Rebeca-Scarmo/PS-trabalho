@@ -1,0 +1,13 @@
+# Sensibilidade dos testes (mutação manual): removidos trg_saldo_incrementa (T3) e trg_item_conferido_valida (T2)
+# Esperado: os testes que dependem dessas regras FALHAM.
+----+--------+------------+-----------------------------------------------------------------------------------+---------------------+---------------------+-----------
+ 10 | CT-10  | Componente | UPDATE direto em SALDO_ESTOQUE é bloqueado (trigger T4; exige linha existente)    | erro 42501          | nenhum erro         | FAIL
+ 11 | CT-10b | Componente | DELETE direto em SALDO_ESTOQUE é bloqueado (trigger T4)                           | erro 42501          | nenhum erro         | FAIL
+ 14 | CT-13  | Componente | Trigger T3: recebida 100, aprovada 90 -> saldo = 90 (e não 100)                   | 90.000              |                     | FAIL
+ 15 | CT-14  | Componente | Trigger T3: segunda conferência acumula (90 + 50 = 140)                           | 140.000             |                     | FAIL
+ 22 | ST-03  | Sistema    | TC-INT-01: item de outra requisição é rejeitado (23514)                           | 23514               | nenhum erro         | FAIL
+ 23 | ST-04  | Sistema    | Falha parcial desfaz a conferência inteira (atomicidade)                          | sem alteração       | alterou             | FAIL
+ 30 | ST-11  | Sistema    | TC-OP-02: após conferir 12 kg aprovados o saldo = 12 (e não 13)                   | 12.000              |                     | FAIL
+ pass | fail | total 
+------+------+-------
+   28 |    7 |    35

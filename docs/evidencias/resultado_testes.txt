@@ -1,0 +1,65 @@
+psql:01_schema.sql:11: NOTICE:  schema "sgf" does not exist, skipping
+=== Testes de componente e de sistema ===
+psql:tests/01_testes.sql:121: NOTICE:  soma NUMERIC = 100000.00, soma FLOAT8 = 100000.00000133288
+ #  |   id   |   nivel    |                                     descricao                                     |      esperado       |       obtido        | resultado 
+----+--------+------------+-----------------------------------------------------------------------------------+---------------------+---------------------+-----------
+  1 | CT-01  | Componente | TC-REG-03: aprovada (15) > recebida (12) é rejeitada (CHECK)                      | erro 23514          | 23514               | PASS
+  2 | CT-02  | Componente | Quantidade recebida negativa é rejeitada (CHECK)                                  | erro 23514          | 23514               | PASS
+  3 | CT-03  | Componente | Status de item fora do domínio é rejeitado (CHECK)                                | erro 23514          | 23514               | PASS
+  4 | CT-04  | Componente | AUSENTE com quantidade aprovada > 0 é rejeitado (CHECK)                           | erro 23514          | 23514               | PASS
+  5 | CT-05  | Componente | Código de insumo duplicado é rejeitado (UNIQUE)                                   | erro 23505          | 23505               | PASS
+  6 | CT-06  | Componente | Unidade suja ("M " / "PÇ") é rejeitada (CHECK de domínio)                         | erro 23514          | 23514               | PASS
+  7 | CT-07  | Componente | Preço de referência negativo é rejeitado (CHECK)                                  | erro 23514          | 23514               | PASS
+  8 | CT-08  | Componente | Quantidade pedida igual a zero é rejeitada (CHECK)                                | erro 23514          | 23514               | PASS
+  9 | CT-09  | Componente | Mesmo insumo duas vezes na mesma requisição é rejeitado (UNIQUE)                  | erro 23505          | 23505               | PASS
+ 10 | CT-10  | Componente | UPDATE direto em SALDO_ESTOQUE é bloqueado (trigger T4; exige linha existente)    | erro 42501          | 42501               | PASS
+ 11 | CT-10b | Componente | DELETE direto em SALDO_ESTOQUE é bloqueado (trigger T4)                           | erro 42501          | 42501               | PASS
+ 12 | CT-11  | Componente | INSERT direto em SALDO_ESTOQUE é bloqueado (trigger T4)                           | erro 42501          | 42501               | PASS
+ 13 | CT-12  | Componente | Requisição sem item é rejeitada no commit (cardinalidade 1,N)                     | erro 23514          | 23514               | PASS
+ 14 | CT-13  | Componente | Trigger T3: recebida 100, aprovada 90 -> saldo = 90 (e não 100)                   | 90.000              | 90.000              | PASS
+ 15 | CT-14  | Componente | Trigger T3: segunda conferência acumula (90 + 50 = 140)                           | 140.000             | 140.000             | PASS
+ 16 | CT-15  | Componente | UPDATE em ITEM_CONFERIDO é bloqueado (trigger T5)                                 | erro 42501          | 42501               | PASS
+ 17 | CT-16  | Componente | DELETE em CONFERENCIA é bloqueado (trigger T5)                                    | erro 42501          | 42501               | PASS
+ 18 | CT-17  | Componente | DECIMAL: 1.000.000 x R$ 0,10 = R$ 100000,00 exato                                 | 100000.00           | 100000.00           | PASS
+ 19 | CT-18  | Componente | FLOAT8 (contraprova): a mesma soma NÃO fecha em 100000 exato                      | diferente de 100000 | diferente de 100000 | PASS
+ 20 | ST-01  | Sistema    | TC-INT-01: conferência da requisição 999 é recusada (erro 23503)                  | 23503               | 23503               | PASS
+ 21 | ST-02  | Sistema    | TC-INT-01: nenhum registro criado em CONFERENCIA/ITEM_CONFERIDO/SALDO_ESTOQUE     | sem alteração       | sem alteração       | PASS
+ 22 | ST-03  | Sistema    | TC-INT-01: item de outra requisição é rejeitado (23514)                           | 23514               | 23514               | PASS
+ 23 | ST-04  | Sistema    | Falha parcial desfaz a conferência inteira (atomicidade)                          | sem alteração       | sem alteração       | PASS
+ 24 | ST-05  | Sistema    | Após conferir, a requisição vira CONFERIDA (trigger T6)                           | CONFERIDA           | CONFERIDA           | PASS
+ 25 | ST-06  | Sistema    | Segunda conferência da mesma requisição é recusada (23514)                        | 23514               | 23514               | PASS
+ 26 | ST-07  | Sistema    | Excluir OBRA que possui requisições é recusado (FK)                               | erro 23503          | 23503               | PASS
+ 27 | ST-08  | Sistema    | Item requisitado com insumo inexistente é recusado (FK)                           | erro 23503          | 23503               | PASS
+ 28 | ST-09  | Sistema    | Excluir INSUMO que tem item requisitado é recusado (FK)                           | erro 23503          | 23503               | PASS
+ 29 | ST-10  | Sistema    | TC-OP-02: saldo inicial de brita no Hospital = 0                                  | 0                   | 0                   | PASS
+ 30 | ST-11  | Sistema    | TC-OP-02: após conferir 12 kg aprovados o saldo = 12 (e não 13)                   | 12.000              | 12.000              | PASS
+ 31 | ST-12  | Sistema    | TC-OP-02: divergência calculada (pedida - aprovada) = 1 kg                        | 1.000               | 1.000               | PASS
+ 32 | ST-13  | Sistema    | View v_total_requisicao: 5 x 38,00 + 1 x 120,00 + 10 x 4,00 = 350.00              | 350.00              | 350.00              | PASS
+ 33 | ST-14  | Sistema    | Invariante: qtd_atual == soma(qtd_aprovada) em todas as linhas de saldo           | 0 divergências      | 0 divergências      | PASS
+ 34 | ST-15  | Sistema    | Issue #15: nenhuma tabela guarda valor total, %, classe ou divergência (colunas)  | 0                   | 0                   | PASS
+ 35 | ST-16  | Sistema    | Issue #15: cada insumo tem uma só descrição (coluna só em INSUMO + código UNIQUE) | 1 tabela; 1 UNIQUE  | 1 tabela; 1 UNIQUE  | PASS
+(35 rows)
+
+ pass | fail | total 
+------+------+-------
+   35 |    0 |    35
+(1 row)
+
+=== DECIMAL x FLOAT ===
+ float8_0_1_mais_0_2_igual_0_3 | numeric_0_1_mais_0_2_igual_0_3 
+-------------------------------+--------------------------------
+ f                             | t
+(1 row)
+
+     tipo      | soma_1e6_x_r$_0_10 
+---------------+--------------------
+ FLOAT8        | 100000.00000133288
+ NUMERIC(12,2) | 100000.00
+ FLOAT4        | 100958.34
+(3 rows)
+
+ float8_total | numeric_total_2casas 
+--------------+----------------------
+ 53.973       | 53.97
+(1 row)
+
