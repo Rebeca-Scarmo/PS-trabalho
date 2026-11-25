@@ -67,20 +67,20 @@
     <div class="content">
       <p class="label">Obra de destino</p>
       <div class="chips" role="radiogroup" aria-label="Obra">
-        <button class="pick on" role="radio" aria-checked="true">Armazém · Amaralina</button>
-        <button class="pick" role="radio" aria-checked="false">Hospital · Brotas</button>
-        <button class="pick" role="radio" aria-checked="false">Colégio · Nazaré</button>
+        <button class="pick on" role="radio" aria-checked="true" data-obra="1">Armazém · Amaralina</button>
+        <button class="pick" role="radio" aria-checked="false" data-obra="2">Hospital · Brotas</button>
+        <button class="pick" role="radio" aria-checked="false" data-obra="3">Colégio · Nazaré</button>
       </div>
       <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" placeholder="Pesquisar item…" data-filtro="lista4"></label>
       <p class="label">Materiais frequentes</p>
       <ul class="list itens" id="lista4">
-        <li class="item" data-preco="38"><div class="info"><strong>Saco de cimento</strong><small>un</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>0</output><button class="plus" aria-label="Aumentar">+</button></div></li>
-        <li class="item" data-preco="9"><div class="info"><strong>Brita</strong><small>kg</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>0</output><button class="plus" aria-label="Aumentar">+</button></div></li>
-        <li class="item" data-preco="4"><div class="info"><strong>Areia</strong><small>kg</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>0</output><button class="plus" aria-label="Aumentar">+</button></div></li>
-        <li class="item" data-preco="120"><div class="info"><strong>Compensado 50x200</strong><small>un</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>0</output><button class="plus" aria-label="Aumentar">+</button></div></li>
+        <li class="item" data-preco="38" data-insumo="1"><div class="info"><strong>Saco de cimento</strong><small>un</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>0</output><button class="plus" aria-label="Aumentar">+</button></div></li>
+        <li class="item" data-preco="9" data-insumo="2"><div class="info"><strong>Brita</strong><small>kg</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>0</output><button class="plus" aria-label="Aumentar">+</button></div></li>
+        <li class="item" data-preco="4" data-insumo="3"><div class="info"><strong>Areia</strong><small>kg</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>0</output><button class="plus" aria-label="Aumentar">+</button></div></li>
+        <li class="item" data-preco="120" data-insumo="4"><div class="info"><strong>Compensado 50x200</strong><small>un</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>0</output><button class="plus" aria-label="Aumentar">+</button></div></li>
       </ul>
     </div>
-    <div class="actionbar"><button class="btn" id="finalizar" disabled data-toast="Pedido enviado!">Finalizar pedido<span class="badge" id="contagem"></span></button></div>
+    <div class="actionbar"><button class="btn" id="finalizar" disabled>Finalizar pedido<span class="badge" id="contagem"></span></button></div>
   </section>
 
   <!-- 5. Almoxarifado -->
@@ -92,18 +92,13 @@
     <div class="content">
       <p class="label">Obra de destino</p>
       <div class="chips" role="radiogroup" aria-label="Obra">
-        <button class="pick on" role="radio" aria-checked="true">Armazém · Amaralina</button>
-        <button class="pick" role="radio" aria-checked="false">Hospital · Brotas</button>
-        <button class="pick" role="radio" aria-checked="false">Colégio · Nazaré</button>
+        <button class="pick on" role="radio" aria-checked="true" data-obra="1">Armazém · Amaralina</button>
+        <button class="pick" role="radio" aria-checked="false" data-obra="2">Hospital · Brotas</button>
+        <button class="pick" role="radio" aria-checked="false" data-obra="3">Colégio · Nazaré</button>
       </div>
       <p class="label">Em estoque agora</p>
       <div class="card">
-        <ul class="pedidos">
-          <li><div><strong>Saco de cimento</strong></div><span class="qtd">12 un</span></li>
-          <li><div><strong>Brita</strong></div><span class="qtd">13 kg</span></li>
-          <li><div><strong>Areia</strong></div><span class="qtd">40 kg</span></li>
-          <li><div><strong>Compensado 50x200</strong></div><span class="qtd">5 un</span></li>
-        </ul>
+        <ul class="pedidos" id="saldo5"></ul>
       </div>
     </div>
     <div class="actionbar"><button class="btn" data-go="tela6">Adicionar produtos</button></div>
@@ -116,16 +111,11 @@
       <h1>Entrada no estoque</h1>
     </header>
     <div class="content">
-      <label class="search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg><input type="search" placeholder="Pesquisar item…" data-filtro="lista6"></label>
-      <p class="label">Materiais frequentes</p>
-      <ul class="list itens" id="lista6">
-        <li class="item"><div class="info"><strong>Saco de cimento</strong><small>un</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>4</output><button class="plus" aria-label="Aumentar">+</button></div></li>
-        <li class="item"><div class="info"><strong>Brita</strong><small>kg</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>13</output><button class="plus" aria-label="Aumentar">+</button></div></li>
-        <li class="item"><div class="info"><strong>Areia</strong><small>kg</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>50</output><button class="plus" aria-label="Aumentar">+</button></div></li>
-        <li class="item"><div class="info"><strong>Compensado 50x200</strong><small>un</small></div><div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>5</output><button class="plus" aria-label="Aumentar">+</button></div></li>
-      </ul>
+      <label class="search"><input type="text" id="nf" placeholder="Nº da nota fiscal" maxlength="20"></label>
+      <p class="label" id="aviso6">Itens da requisição</p>
+      <ul class="list itens" id="lista6"></ul>
     </div>
-    <div class="actionbar"><button class="btn" data-go="tela5" data-toast="Entrada registrada!">Dar entrada no estoque</button></div>
+    <div class="actionbar"><button class="btn" id="entrada" disabled>Dar entrada no estoque</button></div>
   </section>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>

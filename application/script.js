@@ -1,4 +1,6 @@
-// Só o front: navegação, contadores e feedbacks visuais. Sem regra de negócio.
+// Front: navegação, contadores e feedbacks visuais. Sem regra de negócio:
+// pedido, conferência e saldo (telas 4, 5 e 6) vão e vêm da API (mesma origem, sem CORS).
+// As telas 2 e 3 (obras e últimos pedidos) continuam com dados fixos.
 
 var circulos = {
   t1: [[40, 70, 50], [300, 60, 44], [330, 130, 22], [70, 150, 80], [260, 700, 60], [40, 640, 34]],
@@ -52,6 +54,8 @@ function irPara(id) {
   tela.classList.add("active");
   var conteudo = tela.querySelector(".content");
   if (conteudo) conteudo.scrollTop = 0;
+  if (id === "tela5") carregarSaldo();
+  if (id === "tela6") carregarPendente();
 }
 
 function mostrarAviso(texto) {
@@ -59,6 +63,104 @@ function mostrarAviso(texto) {
   toast.textContent = texto;
   toast.classList.add("on");
   setTimeout(function () { toast.classList.remove("on"); }, 1800);
+}
+
+// ---------- API ----------
+function api(url, corpo) {
+  var opcoes = corpo ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(corpo) } : {};
+  return fetch(url, opcoes).then(function (r) {
+    if (r.status === 204) return null;
+    return r.json().catch(function () { return {}; }).then(function (dados) {
+      if (!r.ok) throw new Error(dados.erro || "Erro no servidor");
+      return dados;
+    });
+  });
+}
+
+function erroAviso(e) {
+  mostrarAviso(e instanceof TypeError ? "Servidor indisponível" : e.message);
+}
+
+function esc(texto) {
+  return String(texto).replace(/[&<>"]/g, function (c) {
+    return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+  });
+}
+
+function obraDa(telaId) {
+  return document.querySelector("#" + telaId + " .pick.on").getAttribute("data-obra");
+}
+
+// tela 5: saldo real da obra escolhida
+function carregarSaldo() {
+  api("/api/saldo?obra=" + obraDa("tela5")).then(function (lista) {
+    document.getElementById("saldo5").innerHTML = lista.map(function (i) {
+      var qtd = Number(i.qtd).toLocaleString("pt-BR", { maximumFractionDigits: 3 });
+      return '<li><div><strong>' + esc(i.descricao) + '</strong></div><span class="qtd">' + qtd + " " + esc(i.unidade.toLowerCase()) + "</span></li>";
+    }).join("");
+  }).catch(erroAviso);
+}
+
+// tela 6: itens da requisição EMITIDA mais antiga da obra (a quantidade já vem preenchida com a pedida)
+var requisicaoPendente = null;
+
+function carregarPendente() {
+  var lista = document.getElementById("lista6");
+  var aviso = document.getElementById("aviso6");
+  var botao = document.getElementById("entrada");
+  requisicaoPendente = null;
+  botao.disabled = true;
+  lista.innerHTML = "";
+  document.getElementById("nf").value = "";
+  api("/api/requisicoes/pendente?obra=" + obraDa("tela5")).then(function (req) {
+    if (!req) {
+      aviso.textContent = "Nenhuma requisição aguardando conferência nesta obra.";
+      return;
+    }
+    requisicaoPendente = req.idRequisicao;
+    aviso.textContent = "Requisição nº " + req.idRequisicao + " · informe o que chegou";
+    lista.innerHTML = req.itens.map(function (i) {
+      return '<li class="item" data-item="' + i.id + '"><div class="info"><strong>' + esc(i.descricao) + "</strong><small>" + esc(i.unidade.toLowerCase()) + '</small></div>' +
+        '<div class="stepper"><button class="minus" aria-label="Diminuir">−</button><output>' + Number(i.qtd) + '</output><button class="plus" aria-label="Aumentar">+</button></div></li>';
+    }).join("");
+    lista.querySelectorAll(".stepper").forEach(function (s) {
+      s.querySelector(".minus").disabled = parseInt(s.querySelector("output").textContent, 10) === 0;
+    });
+    botao.disabled = false;
+  }).catch(erroAviso);
+}
+
+// tela 4: emite a requisição
+function finalizarPedido() {
+  var itens = [];
+  document.querySelectorAll("#lista4 .item").forEach(function (item) {
+    var qtd = parseInt(item.querySelector("output").textContent, 10);
+    if (qtd > 0) itens.push({ idInsumo: Number(item.getAttribute("data-insumo")), qtd: qtd });
+  });
+  api("/api/requisicoes", { idObra: Number(obraDa("tela4")), itens: itens }).then(function () {
+    mostrarAviso("Pedido enviado!");
+    limparPedido();
+  }).catch(erroAviso);
+}
+
+// tela 6: grava a conferência (recebido = aprovado); o banco atualiza o saldo
+function registrarEntrada() {
+  var nf = document.getElementById("nf").value.trim();
+  if (!nf) { mostrarAviso("Informe o número da NF"); return; }
+  var itens = [];
+  document.querySelectorAll("#lista6 .item").forEach(function (item) {
+    var qtd = parseInt(item.querySelector("output").textContent, 10);
+    itens.push({ idItemRequisitado: Number(item.getAttribute("data-item")), qtdRecebida: qtd, qtdAprovada: qtd });
+  });
+  var botao = document.getElementById("entrada");
+  botao.disabled = true;
+  api("/api/conferencias", { idRequisicao: requisicaoPendente, nf: nf, itens: itens }).then(function () {
+    mostrarAviso("Entrada registrada!");
+    irPara("tela5");
+  }).catch(function (e) {
+    botao.disabled = false;
+    erroAviso(e);
+  });
 }
 
 // pedido: conta os itens e habilita o botão
@@ -115,6 +217,9 @@ document.addEventListener("click", function (e) {
     return;
   }
 
+  if (botao && botao.id === "finalizar") { if (!botao.disabled) finalizarPedido(); return; }
+  if (botao && botao.id === "entrada") { if (!botao.disabled) registrarEntrada(); return; }
+
   // escolha de obra (chips)
   if (botao && botao.classList.contains("pick")) {
     botao.parentNode.querySelectorAll(".pick").forEach(function (p) {
@@ -123,6 +228,7 @@ document.addEventListener("click", function (e) {
     });
     botao.classList.add("on");
     botao.setAttribute("aria-checked", "true");
+    if (botao.closest("#tela5")) carregarSaldo();
     return;
   }
 
@@ -168,5 +274,5 @@ document.querySelectorAll(".stepper").forEach(function (s) {
 });
 
 // index.html#todas mostra as 6 telas lado a lado
-if (location.hash === "#todas") document.body.classList.add("todas");
+if (location.hash === "#todas") { document.body.classList.add("todas"); carregarSaldo(); carregarPendente(); }
 else irPara("tela1");
